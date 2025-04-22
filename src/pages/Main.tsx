@@ -5,7 +5,7 @@ const Main = () => {
   return(
     <Container>
       <MainBox>
-      <Logo src="/src/assets/Logo.png" alt="" />
+      <Logo src="/src/assets/TextLogo.png" alt="" />
       <Girl src="/src/assets/V.png" alt=""/>
       <Talk src="/src/assets/talk.png" alt=""/>
       <Buttoncontainer>
