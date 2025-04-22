@@ -2,17 +2,18 @@ import styled from "styled-components";
 
 interface ButtonProps {
   text: string;
+  onClick?: () => void;
 }
 
-const Button = ({text}: ButtonProps) => {
+const Button = ({text, onClick}: ButtonProps) => {
   return (
-    <StyledButton>
-      <StyledSpan>{text}</StyledSpan>
-    </StyledButton>
+    <ButtonContainer onClick={onClick}>
+      <Span>{text}</Span>
+    </ButtonContainer>
   );
 };
 
-const StyledSpan = styled.span`
+const Span = styled.span`
   color: white;
   font-size: 32px;
   font-family: Pretendard;
@@ -20,7 +21,7 @@ const StyledSpan = styled.span`
   word-wrap: break-word;
 `;
 
-const StyledButton = styled.button`
+const ButtonContainer = styled.button`
   width: 400px;
   height: 80px;
   background: linear-gradient(179deg, #8465AA 22%, #6736A2 100%);
@@ -29,6 +30,7 @@ const StyledButton = styled.button`
   align-items: center;
   border: none;
   outline: none;
+  cursor: pointer;
 `;
 
 export default Button;

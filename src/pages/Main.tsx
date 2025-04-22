@@ -1,7 +1,18 @@
 import styled from "styled-components";
 import Button from "../components/button/Button";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
+
+  const handlelogin = () => {
+    navigate("/login")
+  }
+
+  const handlesignup = () => {
+    navigate("/signup")
+  }
+
   return(
     <Container>
       <MainBox>
@@ -9,8 +20,8 @@ const Main = () => {
       <Girl src="/src/assets/V.png" alt=""/>
       <Talk src="/src/assets/talk.png" alt=""/>
       <Buttoncontainer>
-        <Button text="로그인" />
-        <Button text="회원가입" />
+        <Button text="로그인" onClick={handlelogin}/>
+        <Button text="회원가입" onClick={handlesignup}/>
       </Buttoncontainer>
       </MainBox>
     </Container>
