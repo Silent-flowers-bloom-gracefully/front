@@ -4,6 +4,7 @@ import textboxUrl from '../assets/Textbox.png';
 import waguriUrl from '../assets/waguri2.png';
 import waguriClickUrl from '../assets/waguri3.png';
 import { useState } from 'react';
+import FlowButton from '../components/button/FlowButton';
 
 const initialCategoryList = [
   { title: '여행', isSelect: false },
@@ -41,6 +42,7 @@ const initialCategoryList = [
 const SelectPage = () => {
   const [categories, setCategories] = useState(initialCategoryList);
   const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
+  const [success, setSucsess] = useState(false);
 
   const handleCategoryClick = (title: string) => {
     setCategories(prevCategories =>
@@ -54,7 +56,13 @@ const SelectPage = () => {
 
   return (
     <Container>
-      <SelectBox>
+      <SelectBox success={success}>
+        {success ? (
+          <BlackModal>
+            <FlowButton span="이대로 진행해도 돼!" />
+            <FlowButton span="아니야!! 수정할게" />
+          </BlackModal>
+        ) : null}
         <LogoBox src={logoUrl} alt="Logo" />
         <div>
           <TitleBox>너의 버킷리스트를 선택할 시간이야</TitleBox>
@@ -73,28 +81,30 @@ const SelectPage = () => {
             </CategoryBox>
           </CategoryWrapper>
         </div>
-        <ButtonBox>완료</ButtonBox>
+        <ButtonBox onClick={() => setSucsess(true)}>완료</ButtonBox>
       </SelectBox>
-      <div>
-        <TextBox>
-          <img src={textboxUrl} alt="Textbox" />
-          <span>
-            {nowWaguriUrl === waguriUrl ? '음,' : '앗.. 나는'}
-            <br /> {nowWaguriUrl === waguriUrl ? '뭐가' : '선택하면'} <br />
-            {nowWaguriUrl === waguriUrl ? '좋을까?' : '안 돼!'}
-          </span>
-        </TextBox>
-        <WaguriBox
-          onClick={() => {
-            setWaguriUrl(waguriClickUrl);
-            setTimeout(() => {
-              setWaguriUrl(waguriUrl);
-            }, 1000);
-          }}
-        >
-          <img src={nowWaguriUrl} alt="Waguri" />
-        </WaguriBox>
-      </div>
+      {success ? null : (
+        <div>
+          <TextBox>
+            <img src={textboxUrl} alt="Textbox" />
+            <span>
+              {nowWaguriUrl === waguriUrl ? '음,' : '앗.. 나는'}
+              <br /> {nowWaguriUrl === waguriUrl ? '뭐가' : '선택하면'} <br />
+              {nowWaguriUrl === waguriUrl ? '좋을까?' : '안 돼!'}
+            </span>
+          </TextBox>
+          <WaguriBox
+            onClick={() => {
+              setWaguriUrl(waguriClickUrl);
+              setTimeout(() => {
+                setWaguriUrl(waguriUrl);
+              }, 1000);
+            }}
+          >
+            <img src={nowWaguriUrl} alt="Waguri" />
+          </WaguriBox>
+        </div>
+      )}
     </Container>
   );
 };
@@ -111,17 +121,22 @@ const Container = styled.div`
   position: relative;
 `;
 
-const SelectBox = styled.main`
+interface SelectBoxProps {
+  success: boolean;
+}
+
+const SelectBox = styled.main<SelectBoxProps>`
   width: 100%;
   max-width: 788px;
   height: 100%;
   border: 1px solid #e3e3e3;
-  padding: 18px;
+  padding: ${({ success }) => (success ? '0px' : '18px')};
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 
   & > div {
     display: flex;
@@ -251,4 +266,14 @@ const CategoryWrapper = styled.div`
   align-items: center;
   justify-content: center;
   gap: 32px;
+`;
+
+const BlackModal = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: flex-end;
+  padding: 41px;
+  box-sizing: border-box;
 `;
