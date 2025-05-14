@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-interface FlowbuttonProps{
+interface FlowbuttonProps {
   span?: string;
 }
 
-const FlowButton = ({span}: FlowbuttonProps) => {
+const FlowButton = ({ span }: FlowbuttonProps) => {
   return (
     <Wrapper>
       <Span>{span}</Span>
@@ -28,17 +28,25 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(0deg, rgba(64.60, 7.83, 55.14, 0.77) 0%, rgba(222.68, 149.25, 201.88, 0.77) 100%);
-  clip-path: polygon(
-  0 0,
-  calc(100% - 55px) 0,
-  100% 40px,
-  100% 100%,
-  55px 100%,
-  0 calc(100% - 40px)
+  background: linear-gradient(
+    0deg,
+    rgba(64.6, 7.83, 55.14, 0.77) 0%,
+    rgba(222.68, 149.25, 201.88, 0.77) 100%
   );
-  &:hover{
-    background: linear-gradient(0deg, rgba(100, 40, 90, 0.77) 0%, rgba(230, 170, 210, 0.77) 100%);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 55px) 0,
+    100% 40px,
+    100% 100%,
+    55px 100%,
+    0 calc(100% - 40px)
+  );
+  &:hover {
+    background: linear-gradient(
+      0deg,
+      rgba(100, 40, 90, 0.77) 0%,
+      rgba(230, 170, 210, 0.77) 100%
+    );
     transform: translate(-5px, -5px);
   }
 `;

@@ -1,22 +1,26 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
-import SelectPage from "./selectBuket/selectPage";
-import Main from "./pages/Main";
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import App from './App';
+import SelectPage from './selectBuket/selectPage';
+import Main from './pages/Main';
+import Landing from './pages/Landing';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />,
+    path: '/',
+    element: <Navigate to="/landing" replace />,
   },
   {
-    path: "/select",
+    path: '/landing',
+    element: <Landing />,
+  },
+  {
+    path: '/select',
     element: <SelectPage />,
   },
   {
-    path: "/main",
+    path: '/main',
     element: <Main />,
-
-  }
+  },
 ]);
 
 export default router;
