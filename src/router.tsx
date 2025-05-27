@@ -1,8 +1,9 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import App from './App';
 import SelectPage from './selectBuket/selectPage';
 import Main from './pages/Main';
 import Landing from './pages/Landing';
+import Todolist from './pages/Todolist';
+import App from './App';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,16 @@ const router = createBrowserRouter([
   {
     path: '/main',
     element: <Main />,
+  },
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: 'todolist',
+        element: <Todolist />,
+      },
+    ],
   },
 ]);
 
