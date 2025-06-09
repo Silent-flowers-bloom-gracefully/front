@@ -4,6 +4,7 @@ import Main from './pages/Main';
 import Landing from './pages/Landing';
 import Todolist from './pages/Todolist';
 import App from './App';
+import Progress from './pages/Progress';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: 'todolist',
         element: <Todolist />,
+      },
+      {
+        path: 'progress',
+        element: <Progress />,
       },
     ],
   },
