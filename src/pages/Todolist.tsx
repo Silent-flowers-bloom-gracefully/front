@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Container from '../components/Container';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CheckBox from '../components/button/CheckBox';
 
 type Category = '여행' | '문화' | '건강' | '자연' | '음식';
@@ -19,10 +19,19 @@ type BucketList = {
 };
 const CategoryItem: Category[] = ['여행', '문화', '건강', '자연', '음식'];
 
+const STORAGE_KEY = 'bucketListItems';
+
 const Todolist = () => {
   const [selectCategory, setSelectCategory] = useState<Category>('여행');
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [bucketListItem, setBucketListItem] = useState<BucketList[]>([]);
+  const [bucketListItem, setBucketListItem] = useState<BucketList[]>(() => {
+    const savedItems = localStorage.getItem(STORAGE_KEY);
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bucketListItem));
+  }, [bucketListItem]);
 
   const handleCategoryClick = (category: Category) => {
     setSelectCategory(category);
@@ -30,7 +39,7 @@ const Todolist = () => {
 
   const handleAddBucketList = () => {
     const newBucketList: BucketList = {
-      id: bucketListItem.length + 1,
+      id: Date.now(),
       content: '새로운 버킷리스트',
       todo: [
         {
@@ -82,7 +91,8 @@ const Todolist = () => {
   };
 
   const handleDelete = (index: number) => {
-    setBucketListItem(bucketListItem.filter((_, i) => i !== index));
+    const filteredList = bucketListItem.filter((_, i) => i !== index);
+    setBucketListItem(filteredList);
   };
 
   const filteredBucketList = bucketListItem.filter(
