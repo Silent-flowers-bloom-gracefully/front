@@ -30,6 +30,17 @@ const Todolist = () => {
   });
 
   useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY && e.newValue) {
+        setBucketListItem(JSON.parse(e.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bucketListItem));
   }, [bucketListItem]);
 
@@ -43,7 +54,7 @@ const Todolist = () => {
       content: '새로운 버킷리스트',
       todo: [
         {
-          id: 1,
+          id: Date.now(),
           content: '새로운 할 일',
           isSucceed: false,
         },
@@ -127,7 +138,32 @@ const Todolist = () => {
             {filteredBucketList.map((bucketList, i) => (
               <BucketList key={bucketList.id}>
                 <BucketListTitle>
-                  <p>{bucketList.content}</p>
+                  {isEditing ? (
+                    <input
+                      value={bucketList.content}
+                      onChange={e => {
+                        const newList = bucketListItem.map((el, index) => {
+                          if (index === i) {
+                            return {
+                              ...el,
+                              content: e.target.value,
+                            };
+                          }
+                          return el;
+                        });
+                        setBucketListItem(newList);
+                      }}
+                      style={{
+                        fontSize: 'large',
+                        fontWeight: 'bold',
+                        border: 'none',
+                        background: 'transparent',
+                        padding: '0',
+                      }}
+                    />
+                  ) : (
+                    <p>{bucketList.content}</p>
+                  )}
                   <div>
                     <button onClick={handleEdit}>
                       {isEditing ? '완료' : '수정'}
@@ -139,8 +175,20 @@ const Todolist = () => {
                   if (!isEditing) {
                     return (
                       <TodoList key={todo.id}>
-                        <CheckBox onClick={() => toggleTodoSuccess(i, j)} />
-                        <span>{todo.content}</span>
+                        <CheckBox
+                          checked={todo.isSucceed}
+                          onClick={() => toggleTodoSuccess(i, j)}
+                        />
+                        <span
+                          style={{
+                            textDecoration: todo.isSucceed
+                              ? 'line-through'
+                              : 'none',
+                            color: todo.isSucceed ? '#a0a0a0' : 'inherit',
+                          }}
+                        >
+                          {todo.content}
+                        </span>
                       </TodoList>
                     );
                   } else {
@@ -185,7 +233,7 @@ const Todolist = () => {
                             todo: [
                               ...el.todo,
                               {
-                                id: el.todo.length + 1,
+                                id: Date.now(),
                                 content: '',
                                 isSucceed: false,
                               },
