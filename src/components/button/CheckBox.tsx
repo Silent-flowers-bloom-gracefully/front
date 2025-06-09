@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Check from '../../assets/check';
 
@@ -6,12 +6,23 @@ interface PropsType {
   onClick?: () => void;
   width?: string;
   height?: string;
+  checked?: boolean;
 }
 
-const CheckBox = ({ onClick, width = '32px', height = '32px' }: PropsType) => {
-  const [state, setState] = useState<boolean>(false);
+const CheckBox = ({
+  onClick,
+  width = '32px',
+  height = '32px',
+  checked = false,
+}: PropsType) => {
+  const [state, setState] = useState<boolean>(checked);
+
+  useEffect(() => {
+    setState(checked);
+  }, [checked]);
+
   const handleClick = () => {
-    onClick && onClick();
+    if (onClick) onClick();
     setState(!state);
   };
 

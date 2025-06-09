@@ -1,9 +1,24 @@
 import styled from 'styled-components';
 import LogoUrl from '../assets/TextLogo2.png';
-import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const tabs = [
+    { label: '진행도', path: '/progress' },
+    { label: 'to-do리스트', path: '/todolist' },
+    { label: '커뮤니티', path: '/커뮤니티' },
+    { label: '마이', path: '/마이' },
+  ];
+
+  const currentPath = location.pathname;
+  const selectedIndex = tabs.findIndex(tab => tab.path === currentPath);
+
+  const handleTabClick = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <Container>
@@ -12,13 +27,13 @@ const Header = () => {
           <img src={LogoUrl} />
         </LogoBox>
         <TabList>
-          {['진행도', 'to-do리스트', '커뮤니티', '마이'].map((label, index) => (
+          {tabs.map((tab, index) => (
             <li
-              key={label}
+              key={tab.label}
               className={selectedIndex === index ? 'selected' : ''}
-              onClick={() => setSelectedIndex(index)}
+              onClick={() => handleTabClick(tab.path)}
             >
-              {label}
+              {tab.label}
               <div></div>
             </li>
           ))}
