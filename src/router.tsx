@@ -5,6 +5,9 @@ import Main from "./pages/Main";
 import Landing from './pages/Landing';
 import Community from './pages/Community';
 import Write from './pages/Write';
+import Login from "./pages/Login";
+import LoginFlow from "./pages/LoginFlow";
+
 
 const router = createBrowserRouter([
   {
@@ -28,6 +31,15 @@ const router = createBrowserRouter([
     path:'/write',
     element: <Write/>,
   },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/loginflow",
+    element: <LoginFlow />,
+  },
+  
 ]);
 
 export default router;

@@ -13,7 +13,7 @@ export default function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 10000);
+    const timer = setTimeout(() => setIsVisible(true), 9000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -138,7 +138,7 @@ const TouchToStart = styled.div`
   width: 100%;
   text-align: center;
   font-size: 24px;
-  color: #707070;
+  color: #838282;
   animation: blink 1.2s infinite;
   cursor: pointer;
 

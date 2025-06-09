@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Button from "../components/button/Button";
 import { useNavigate } from "react-router-dom";
 
-const Main = () => {
+export default function Main() {
   const navigate = useNavigate();
 
   const handlelogin = () => {
@@ -16,7 +16,7 @@ const Main = () => {
   return(
     <Container>
       <MainBox>
-      <Logo src="/src/assets/TextLogo.png" alt="" />
+      <Logo src="/src/assets/BTextLogo.png" alt="" />
       <Girl src="/src/assets/V.png" alt=""/>
       <Talk src="/src/assets/talk.png" alt=""/>
       <Buttoncontainer>
@@ -29,6 +29,15 @@ const Main = () => {
 
 };
 
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const MainBox = styled.div`
   position: relative;
   display: flex;
@@ -39,15 +48,6 @@ const MainBox = styled.div`
   height: 100%;
   background-color: #FCF8FF;
   border: 0px 1px 0px 1px solid #E3E3E3;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const Buttoncontainer = styled.div`
@@ -77,5 +77,3 @@ const Talk = styled.img`
   left: 220px;
   bottom: 410px;
 `;
-
-export default Main;

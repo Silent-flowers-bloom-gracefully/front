@@ -5,14 +5,13 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button = ({text, onClick}: ButtonProps) => {
+const Button = ({ text, onClick }: ButtonProps) => {
   return (
     <ButtonContainer onClick={onClick}>
       <Span>{text}</Span>
     </ButtonContainer>
   );
 };
-
 const Span = styled.span`
   color: white;
   font-size: 32px;
@@ -31,6 +30,10 @@ const ButtonContainer = styled.button`
   border: none;
   outline: none;
   cursor: pointer;
+
+  &:hover{
+    background: linear-gradient(179deg, #9372ba 22%, #7742b8 100%);
+  }
 `;
 
 export default Button;
