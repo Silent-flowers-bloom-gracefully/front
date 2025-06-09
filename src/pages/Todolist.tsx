@@ -15,6 +15,7 @@ type BucketList = {
   id: number;
   content: string;
   todo: Todo[];
+  category: Category;
 };
 const CategoryItem: Category[] = ['여행', '문화', '건강', '자연', '음식'];
 
@@ -38,6 +39,7 @@ const Todolist = () => {
           isSucceed: false,
         },
       ],
+      category: selectCategory,
     };
     setBucketListItem([...bucketListItem, newBucketList]);
   };
@@ -83,6 +85,10 @@ const Todolist = () => {
     setBucketListItem(bucketListItem.filter((_, i) => i !== index));
   };
 
+  const filteredBucketList = bucketListItem.filter(
+    item => item.category === selectCategory
+  );
+
   return (
     <Container>
       <Wrapper>
@@ -100,7 +106,7 @@ const Todolist = () => {
             ))}
           </ul>
         </Categories>
-        {bucketListItem.length === 0 ? (
+        {filteredBucketList.length === 0 ? (
           <EmptyState>
             <AddButton onClick={handleAddBucketList}>
               + 새로운 버킷리스트 추가하기
@@ -108,7 +114,7 @@ const Todolist = () => {
           </EmptyState>
         ) : (
           <>
-            {bucketListItem.map((bucketList, i) => (
+            {filteredBucketList.map((bucketList, i) => (
               <BucketList key={bucketList.id}>
                 <BucketListTitle>
                   <p>{bucketList.content}</p>
