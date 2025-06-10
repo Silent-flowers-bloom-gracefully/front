@@ -5,11 +5,11 @@ import Button from "../components/button/Button";
 export default function Main() {
   const navigate = useNavigate();
 
-  const handlelogin = () => {
+  const handleLogin = () => {
     navigate("/login")
   }
 
-  const handlesignup = () => {
+  const handleSignup = () => {
     navigate("/signup")
   }
 
@@ -19,10 +19,10 @@ export default function Main() {
       <Logo src="/src/assets/BTextLogo.png" alt="" />
       <Girl src="/src/assets/V.png" alt=""/>
       <Talk src="/src/assets/talk.png" alt=""/>
-      <Buttoncontainer>
-        <Button text="로그인" onClick={handlelogin}/>
-        <Button text="회원가입" onClick={handlesignup}/>
-      </Buttoncontainer>
+      <ButtonContainer>
+        <Button text="로그인" onClick={handleLogin}/>
+        <Button text="회원가입" onClick={handleSignup}/>
+      </ButtonContainer>
       </MainBox>
     </Container>
   )
