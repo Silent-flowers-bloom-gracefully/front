@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 const Main = () => {
   const navigate = useNavigate();
 
-  const handlelogin = () => {
+  const handleLogin = () => {
     navigate("/login")
   }
 
-  const handlesignup = () => {
+  const handleSignup = () => {
     navigate("/signup")
   }
 
@@ -19,10 +19,10 @@ const Main = () => {
       <Logo src="/src/assets/TextLogo.png" alt="" />
       <Girl src="/src/assets/V.png" alt=""/>
       <Talk src="/src/assets/talk.png" alt=""/>
-      <Buttoncontainer>
-        <Button text="로그인" onClick={handlelogin}/>
-        <Button text="회원가입" onClick={handlesignup}/>
-      </Buttoncontainer>
+      <ButtonContainer>
+        <Button text="로그인" onClick={handleLogin}/>
+        <Button text="회원가입" onClick={handleSignup}/>
+      </ButtonContainer>
       </MainBox>
     </Container>
   )
@@ -50,7 +50,7 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const Buttoncontainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
