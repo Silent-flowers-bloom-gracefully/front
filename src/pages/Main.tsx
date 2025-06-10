@@ -50,7 +50,7 @@ const MainBox = styled.div`
   border: 0px 1px 0px 1px solid #E3E3E3;
 `;
 
-const Buttoncontainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
