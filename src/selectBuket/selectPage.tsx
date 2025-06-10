@@ -3,8 +3,10 @@ import logoUrl from '../assets/TextLogo.png';
 import textboxUrl from '../assets/Textbox.png';
 import waguriUrl from '../assets/waguri2.png';
 import waguriClickUrl from '../assets/waguri3.png';
+import waguriSuccessUrl from '../assets/waguri4.png';
 import { useState } from 'react';
 import FlowButton from '../components/button/FlowButton';
+import { useNavigate } from 'react-router-dom';
 
 const initialCategoryList = [
   { title: '여행', isSelect: false },
@@ -40,9 +42,10 @@ const initialCategoryList = [
 ];
 
 const SelectPage = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState(initialCategoryList);
   const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
-  const [success, setSucsess] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleCategoryClick = (title: string) => {
     setCategories(prevCategories =>
@@ -59,8 +62,21 @@ const SelectPage = () => {
       <SelectBox success={success}>
         {success ? (
           <BlackModal>
-            <FlowButton span="이대로 진행해도 돼!" />
-            <FlowButton span="아니야!! 수정할게" />
+            <img src={waguriSuccessUrl} width={400} />
+            <SpeechBubble>
+              <p>
+                진짜 <br />
+                이대로 진행해도
+                <br />
+                괜찮아?
+              </p>
+            </SpeechBubble>
+            <div onClick={() => navigate('/todolist')}>
+              <FlowButton span="이대로 진행해도 돼!" />
+            </div>
+            <div onClick={() => setSuccess(false)}>
+              <FlowButton span="아니야!! 수정할게" />
+            </div>
           </BlackModal>
         ) : null}
         <LogoBox src={logoUrl} alt="Logo" />
@@ -81,7 +97,7 @@ const SelectPage = () => {
             </CategoryBox>
           </CategoryWrapper>
         </div>
-        <ButtonBox onClick={() => setSucsess(true)}>완료</ButtonBox>
+        <ButtonBox onClick={() => setSuccess(true)}>완료</ButtonBox>
       </SelectBox>
       {success ? null : (
         <div>
@@ -276,4 +292,34 @@ const BlackModal = styled.div`
   justify-content: flex-end;
   padding: 41px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  & > img {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+  }
+`;
+
+const SpeechBubble = styled.div`
+  background-color: white;
+  padding: 20px 30px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: 20px;
+  border: 2px solid #000;
+  min-width: 200px;
+  top: -100px;
+
+  p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.5;
+    color: #333;
+  }
 `;
