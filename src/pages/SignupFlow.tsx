@@ -91,7 +91,7 @@ export default function SignupFlow() {
         <LineContainer>
           <ImageContainer>
             <Logo src="/src/assets/TextLogo.png" />
-            <Character src="/src/assets/waguri3.png" alt="" />
+            <Character src="/src/assets/waguri6.png" alt="" />
             <Line
               name={name}
               description={description}

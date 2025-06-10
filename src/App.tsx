@@ -1,21 +1,78 @@
-import { useLocation, Outlet } from 'react-router-dom';
-import Header from './components/Header';
+import { motion } from "framer-motion";
+import styled from "styled-components";
+import logoUrl from "./assets/Logo.png";
+import flower1Url from "./assets/flower1.png";
+import waguri1Url from "./assets/waguri1.png";
+import flower2Url from "./assets/flower2.png";
+import textLogoUrl from "./assets/TextLogo.png";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function App() {
-  const location = useLocation();
-  const showHeaderPaths = ['/진행도', 'todo리스트', '커뮤니티', '마이']; // 나중에 실제 경로로 변경 필요
-  const shouldShowHeader = showHeaderPaths.includes(location.pathname);
+  const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 9000);
     return () => clearTimeout(timer);
   }, []);
 
+  const handleClickAnywhere = () => {
+    if(isVisible){
+      setIsVisible(false);
+      navigate("/main");
+    }
+  }
+
   return (
-    <>
-      {shouldShowHeader && <Header />}
-      <Outlet />
-    </>
+    <Container
+      $clickable={isVisible}
+      onClick={handleClickAnywhere}
+      animate={{ backgroundColor: "#EED8F6" }}
+      transition={backgroundFade}
+    >
+      <LogoBox src={logoUrl} alt="Character" {...fadeInOut} />
+      <TextBox {...fadeInOutWithDelay}>
+        <span>Team</span>
+        <br />
+        <h1>Waguri</h1>
+      </TextBox>
+
+      <MainBox
+        animate={{ backgroundColor: "#F9E8FF", opacity: 1 }}
+        transition={backgroundFade}
+      >
+        <Flower1
+          src={flower1Url}
+          alt="flower1"
+          initial={{ top: -483 }}
+          animate={{ top: 0 }}
+          transition={delayedMove}
+        />
+        <Flower2
+          src={flower2Url}
+          alt="flower2"
+          initial={{ left: -192, bottom: 0 }}
+          animate={{ left: 0 }}
+          transition={delayedMove}
+        />
+        <Waguri1
+          src={waguri1Url}
+          alt="waguri1"
+          initial={{ right: 0, bottom: -758 }}
+          animate={{ bottom: -40 }}
+          transition={delayedMove}
+        />
+        <TextLogo
+          src={textLogoUrl}
+          alt="textLogo"
+          initial={{ top: 230, left: -500 }}
+          animate={{ left: 0 }}
+          transition={delayedMove}
+        />
+        {isVisible && <TouchToStart>Touch to Start</TouchToStart>}
+      </MainBox>
+    </Container>
   );
 }
 

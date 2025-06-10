@@ -1,139 +1,279 @@
-import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import Button from "../components/button/Button";
-import { useAuth } from "../context/AuthContext";
+import { styled } from 'styled-components';
+import logoUrl from '../assets/TextLogo.png';
+import textboxUrl from '../assets/Textbox.png';
+import waguriUrl from '../assets/waguri2.png';
+import waguriClickUrl from '../assets/waguri3.png';
+import { useState } from 'react';
+import FlowButton from '../components/button/FlowButton';
 
-const BASE_URL = "https://silent-flowers.xquare.app";
-
-const categories = [
-  "여행", "문화", "건강", "자연", "음식", "취미", "학업", "취업", "연애", "기타"
+const initialCategoryList = [
+  { title: '여행', isSelect: false },
+  { title: '문화', isSelect: false },
+  { title: '자기계발', isSelect: false },
+  { title: '건강', isSelect: false },
+  { title: '예술', isSelect: false },
+  { title: '음식', isSelect: false },
+  { title: '경제', isSelect: false },
+  { title: '커리어', isSelect: false },
+  { title: '인간관계', isSelect: false },
+  { title: '봉사', isSelect: false },
+  { title: '명상', isSelect: false },
+  { title: '습관', isSelect: false },
+  { title: '감정', isSelect: false },
+  { title: '미래계획', isSelect: false },
+  { title: '기술', isSelect: false },
+  { title: '글쓰기', isSelect: false },
+  { title: '공연', isSelect: false },
+  { title: '연애', isSelect: false },
+  { title: '가족', isSelect: false },
+  { title: '자연', isSelect: false },
+  { title: '동물', isSelect: false },
+  { title: '언어', isSelect: false },
+  { title: '자격증', isSelect: false },
+  { title: '리더십', isSelect: false },
+  { title: '환경', isSelect: false },
+  { title: '창업', isSelect: false },
+  { title: '캠페인', isSelect: false },
+  { title: '시간관리', isSelect: false },
+  { title: '라이프스타일', isSelect: false },
+  { title: '기타', isSelect: false },
 ];
 
-export default function SelectBuket() {
-  const navigate = useNavigate();
-  const { signupData } = useAuth();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [error, setError] = useState<string>("");
+const SelectPage = () => {
+  const [categories, setCategories] = useState(initialCategoryList);
+  const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
+  const [success, setSucsess] = useState(false);
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(category)) {
-        return prev.filter(c => c !== category);
-      }
-      if (prev.length < 5) {
-        return [...prev, category];
-      }
-      return prev;
-    });
-  };
-
-  const handleSubmit = async () => {
-    if (selectedCategories.length > 0) {
-      try {
-        const response = await axios.post(`${BASE_URL}/auth/signup`, {
-          username: signupData.username,
-          password: signupData.password,
-          nickname: signupData.nickname,
-          categories: selectedCategories.map(category => category.slice(0, 10))
-        });
-
-        if (response.status === 201) {
-          navigate("/main");
-        }
-      } catch (error: any) {
-        if (error.response?.status === 409) {
-          setError("이미 존재하는 아이디입니다.");
-        } else {
-          setError("회원가입에 실패했습니다. 다시 시도해주세요.");
-        }
-        console.error("API 호출 실패:", error);
-      }
-    }
+  const handleCategoryClick = (title: string) => {
+    setCategories(prevCategories =>
+      prevCategories.map(category =>
+        category.title === title
+          ? { ...category, isSelect: !category.isSelect }
+          : category
+      )
+    );
   };
 
   return (
     <Container>
-      <MainBox>
-        <Title>관심 카테고리를 선택해주세요</Title>
-        <SubTitle>최대 5개까지 선택 가능합니다</SubTitle>
-        <CategoryContainer>
-          {categories.map(category => (
-            <CategoryButton
-              key={category}
-              selected={selectedCategories.includes(category)}
-              onClick={() => handleCategoryClick(category)}
-            >
-              {category}
-            </CategoryButton>
-          ))}
-        </CategoryContainer>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button 
-          text="완료" 
-          onClick={handleSubmit}
-          disabled={selectedCategories.length === 0}
-        />
-      </MainBox>
+      <SelectBox success={success}>
+        {success ? (
+          <BlackModal>
+            <FlowButton span="이대로 진행해도 돼!" />
+            <FlowButton span="아니야!! 수정할게" />
+          </BlackModal>
+        ) : null}
+        <LogoBox src={logoUrl} alt="Logo" />
+        <div>
+          <TitleBox>너의 버킷리스트를 선택할 시간이야</TitleBox>
+          <CategoryWrapper>
+            <PlaceholderBox>1개 이상을 선택해 주세요</PlaceholderBox>
+            <CategoryBox>
+              {categories.map(category => (
+                <CategoryItem
+                  key={category.title}
+                  onClick={() => handleCategoryClick(category.title)}
+                  isSelected={category.isSelect}
+                >
+                  <CategoryItemText>{category.title}</CategoryItemText>
+                </CategoryItem>
+              ))}
+            </CategoryBox>
+          </CategoryWrapper>
+        </div>
+        <ButtonBox onClick={() => setSucsess(true)}>완료</ButtonBox>
+      </SelectBox>
+      {success ? null : (
+        <div>
+          <TextBox>
+            <img src={textboxUrl} alt="Textbox" />
+            <span>
+              {nowWaguriUrl === waguriUrl ? '음,' : '앗.. 나는'}
+              <br /> {nowWaguriUrl === waguriUrl ? '뭐가' : '선택하면'} <br />
+              {nowWaguriUrl === waguriUrl ? '좋을까?' : '안 돼!'}
+            </span>
+          </TextBox>
+          <WaguriBox
+            onClick={() => {
+              setWaguriUrl(waguriClickUrl);
+              setTimeout(() => {
+                setWaguriUrl(waguriUrl);
+              }, 1000);
+            }}
+          >
+            <img src={nowWaguriUrl} alt="Waguri" />
+          </WaguriBox>
+        </div>
+      )}
     </Container>
   );
-}
+};
+
+export default SelectPage;
 
 const Container = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const MainBox = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 788px;
+  justify-content: center;
+  position: relative;
+`;
+
+interface SelectBoxProps {
+  success: boolean;
+}
+
+const SelectBox = styled.main<SelectBoxProps>`
+  width: 100%;
+  max-width: 788px;
   height: 100%;
-  gap: 30px;
+  border: 1px solid #e3e3e3;
+  padding: ${({ success }) => (success ? '0px' : '18px')};
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
 `;
 
-const Title = styled.h1`
-  font-size: 32px;
-  font-weight: 500;
+const LogoBox = styled.img`
+  width: 136px;
+  height: 52px;
+  margin-right: auto;
 `;
 
-const SubTitle = styled.p`
-  font-size: 20px;
-  color: #666;
-  margin-top: -20px;
+const TextBox = styled.div`
+  position: absolute;
+  bottom: 400px;
+  right: 400px;
+  transform: translate(50%, 50%);
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+
+  & > img {
+    width: 200px;
+    height: auto;
+    display: block;
+  }
+
+  & > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.5;
+  }
 `;
 
-const CategoryContainer = styled.div`
+const WaguriBox = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  & > img {
+    width: 400px;
+    height: auto;
+    display: block;
+  }
+`;
+
+const TitleBox = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5;
+`;
+
+const PlaceholderBox = styled.div`
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.5;
+  right: -25%;
+  position: relative;
+  color: #a0a0a0;
+  font-size: 15px;
+`;
+
+const CategoryBox = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 10px;
+  padding: 0 50px;
   justify-content: center;
-  max-width: 600px;
+  align-items: center;
 `;
 
-const CategoryButton = styled.button<{ selected: boolean }>`
-  width: 100px;
-  height: 44px;
-  padding: 6px 12px;
-  border-radius: 22px;
+const CategoryItem = styled.div<{ isSelected: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #a558ff;
+  border-radius: 25px;
+  padding: 13px 0;
+  min-width: 100px;
+  width: fit-content;
+  background-color: ${props => (props.isSelected ? '#a558ff' : 'transparent')};
+  color: ${props => (props.isSelected ? '#fff' : '#a558ff')};
+  font-size: 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: #cba3fb;
+    color: #fff;
+  }
+`;
+
+const CategoryItemText = styled.div`
   font-size: 16px;
-  border: 1px solid ${({ selected }) => (selected ? "#A558FF" : "#A0A0A0")};
-  background-color: #fff;
-  color: ${({ selected }) => (selected ? "#A558FF" : "#A0A0A0")};
-  cursor: pointer;
-  transition: all 0.2s;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.5;
 `;
 
-const ErrorMessage = styled.p`
-  color: #ff0000;
-  font-size: 14px;
-  margin-top: -10px;
-`; 
+const ButtonBox = styled.button`
+  max-width: 573px;
+  width: 100%;
+  padding: 15px 0;
+  background-color: #a558ff;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  font-size: 24px;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #cba3fb;
+  }
+`;
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+`;
+
+const BlackModal = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: flex-end;
+  padding: 41px;
+  box-sizing: border-box;
+`;

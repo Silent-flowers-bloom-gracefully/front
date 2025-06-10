@@ -9,20 +9,20 @@ const dummyLines = [
     name: "카오루코 와구리",
     description: "오랜만에 만나는 거 같아..ㅠㅜ\n그동안 잘 지냈어??",
     // TODO: 초기 이미지와 배경
-    character: "/src/assets/waguri3.png",
+    character: "/src/assets/waguri6.png",
     background: "/src/assets/bg.png"
   },
   {
     name: "카오루코 와구리",
     description: "우리 다시 버킷리스트 달성을 위해\n힘내보자!!",
     // TODO: 두 번째 대화의 이미지와 배경
-    character: "/src/assets/waguri3.png",
+    character: "/src/assets/waguri6.png",
     background: "/src/assets/bg.png"
   },
   {
     name: "",
     description: "",
-    character: "/src/assets/waguri3.png",
+    character: "/src/assets/waguri6.png",
     background: "/src/assets/bg.png"
   }
 ];
@@ -44,21 +44,21 @@ const secondChoiceLines = [
     name: "카오루코 와구리",
     description: "ㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
     // TODO: 두 번째 선택지 첫 번째 대화의 이미지와 배경
-    character: "/src/assets/waguri4.png",
+    character: "/src/assets/waguri7.png",
     background: "/src/assets/bg3.png"
   },
   {
     name: "카오루코 와구리",
     description: "어? 뭐라고? 싫 다 고?",
     // TODO: 두 번째 선택지 두 번째 대화의 이미지와 배경
-    character: "/src/assets/waguri4.png",
+    character: "/src/assets/waguri7.png",
     background: "/src/assets/bg3.png"
   },
   {
     name: "카오루코 와구리",
     description: "잠깐 눈 감아 볼래?",
     // TODO: 두 번째 선택지 세 번째 대화의 이미지와 배경
-    character: "/src/assets/waguri4.png",
+    character: "/src/assets/waguri7.png",
     background: "/src/assets/bg3.png"
   }
 ];
