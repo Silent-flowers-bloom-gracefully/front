@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Leftarrow from "../assets/leftarrow.png"
 import Button from "../components/button/Button"
-import Header from "../components/Header"
+// import Header from "../components/Header"
 
 const WritePage = () => {
   const allTags = ["여행", "문화", "건강", "자연", "음식"];
@@ -12,7 +12,7 @@ const WritePage = () => {
   return (
     <Container>
       <MainBox>
-        <Header />
+        {/* <Header /> */}
         <Contents>
           <HeaderRow>
             <BackButton onClick={() => window.history.back()}>

@@ -1,25 +1,32 @@
 import { useState } from "react";
-import styled from "styled-components";
-import Input from "../components/input/Input";
-import AuthButton from "../components/button/AuthButton";
-import Back from "../components/back/Back";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Back from "../components/back/Back";
+import AuthButton from "../components/button/AuthButton";
+import Input from "../components/input/Input";
+import { useAuth } from "../context/AuthContext";
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
+  const { signupData, setSignupData } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     if (username.trim() && password.trim()) {
-      navigate("/loginflow");
+      setSignupData(prev => ({
+        ...prev,
+        username,
+        password
+      }));
+      navigate("/signupflow");
     }
   };
 
   return (
     <Container>
       <MainBox>
-        <Back span="로그인"/>
+        <Back span="회원가입"/>
         <TextLogo src="/src/assets/TextLogo.png" alt=""/>
         <InputContainer>
           <Input 
@@ -34,7 +41,7 @@ export default function Login() {
             type="password"
           />
         </InputContainer>
-        <AuthButton text="로그인" onClick={handleLogin} />
+        <AuthButton text="회원가입" onClick={handleSignup} />
       </MainBox>
     </Container>
   );

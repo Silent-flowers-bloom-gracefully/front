@@ -5,14 +5,16 @@ interface ChooseProps{
   title: string;
   span: string;
   span2?: string;
+  onChooseClick?: () => void;
+  onAutoNameClick?: () => void;
 }
 
-const Choose = ({title, span, span2}: ChooseProps) => {
+const Choose = ({title, span, span2, onChooseClick, onAutoNameClick}: ChooseProps) => {
   return(
     <Wrapper>
       <Title>{title}</Title>
-      <FlowButton span={span}/>
-      <FlowButton span={span2}/>
+      <FlowButton span={span} onClick={onChooseClick}/>
+      <FlowButton span={span2} onClick={onAutoNameClick}/>
     </Wrapper>
   )
 }
@@ -34,7 +36,5 @@ const Wrapper = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
 `;
-
-
 
 export default Choose;
