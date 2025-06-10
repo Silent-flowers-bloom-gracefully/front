@@ -85,6 +85,8 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  scrollbar-gutter: stable;
+
 }
 article,
 aside,

@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
-interface FlowbuttonProps {
-  span?: string;
+interface FlowButtonProps {
+  span: string;
+  onClick?: () => void;
 }
 
-const FlowButton = ({ span }: FlowbuttonProps) => {
+const FlowButton = ({span, onClick}: FlowButtonProps) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <Span>{span}</Span>
     </Wrapper>
   );

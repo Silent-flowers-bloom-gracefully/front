@@ -1,8 +1,13 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import App from './App';
-import SelectPage from './selectBuket/selectPage';
-import Main from './pages/Main';
+import { createBrowserRouter } from "react-router-dom";
+import App from "./App";
+import SelectPage from "./selectBuket/selectPage";
+import Main from "./pages/Main";
 import Landing from './pages/Landing';
+import Community from './pages/Community';
+import Write from './pages/Write';
+import Login from "./pages/Login";
+import LoginFlow from "./pages/LoginFlow";
+
 
 const router = createBrowserRouter([
   {
@@ -20,7 +25,8 @@ const router = createBrowserRouter([
   {
     path: '/main',
     element: <Main />,
-  },
+
+  }
 ]);
 
 export default router;
