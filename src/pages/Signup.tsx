@@ -8,43 +8,55 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { signupData, setSignupData } = useAuth();
+  const { setSignupData } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSignup = () => {
-    if (username.trim() && password.trim()) {
-      setSignupData(prev => ({
-        ...prev,
-        username,
-        password
-      }));
-      navigate("/signupflow");
+    if (!username || !password) {
+      setError("아이디와 비밀번호를 모두 입력해주세요.");
+      return;
     }
+
+    // 회원가입 데이터 저장
+    setSignupData({
+      username,
+      password,
+      nickname: "" // 닉네임은 회원가입 플로우에서 입력
+    });
+
+    // 회원가입 플로우로 이동
+    navigate("/signupflow");
   };
 
-  return (
+  return(
     <Container>
       <MainBox>
         <Back span="회원가입"/>
         <TextLogo src="/src/assets/TextLogo.png" alt=""/>
         <InputContainer>
           <Input 
-            label="아이디" 
+            label="아이디"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            error={error}
           />
           <Input 
-            label="비밀번호" 
+            label="비밀번호"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            type="password"
+            error={error}
           />
         </InputContainer>
-        <AuthButton text="회원가입" onClick={handleSignup} />
+        <AuthButton 
+          text="다음" 
+          onClick={handleSignup}
+        />
       </MainBox>
     </Container>
-  );
+  )
 }
 
 const Container = styled.div`

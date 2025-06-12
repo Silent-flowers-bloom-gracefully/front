@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/button/Button";
@@ -6,6 +6,7 @@ import Choose from "../components/choose/Choose";
 import Input from "../components/input/Input";
 import Line from "../components/line/Line";
 import { useAuth } from "../context/AuthContext";
+import { saveNickname } from "../utils/nickname";
 
 const dummyLines = [
   {
@@ -49,10 +50,12 @@ export default function SignupFlow() {
     setShowAutoName(true);
     setTimeout(() => {
       setShowAutoName(false);
+      const autoNickname = "이태영";
       setSignupData(prev => ({
         ...prev,
-        nickname: "이태영"
+        nickname: autoNickname
       }));
+      saveNickname(autoNickname);
       dummyLines[2] = {
         name: "카오루코 와구리",
         description: "이태영!! 정말 멋진 이름이야.\n이제 버킷리스트 달성하러 가보자고!"
@@ -72,6 +75,7 @@ export default function SignupFlow() {
         ...prev,
         nickname
       }));
+      saveNickname(nickname);
       dummyLines[2] = {
         name: "카오루코 와구리",
         description: `${nickname}!! 정말 멋진 이름이야.\n이제 버킷리스트 달성하러 가보자고!`

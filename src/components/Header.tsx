@@ -1,6 +1,6 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoUrl from '../assets/TextLogo2.png';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const location = useLocation();
@@ -9,8 +9,8 @@ const Header = () => {
   const tabs = [
     { label: '진행도', path: '/progress' },
     { label: 'to-do리스트', path: '/todolist' },
-    { label: '커뮤니티', path: '/커뮤니티' },
-    { label: '마이', path: '/마이' },
+    { label: '커뮤니티', path: '/community' },
+    { label: '마이', path: '/my' },
   ];
 
   const currentPath = location.pathname;

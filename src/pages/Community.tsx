@@ -1,176 +1,208 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
-// import Header from "../components/Header";
-import WriteButton from "../components/button/WriteButton";
+import Container from '../components/Container';
+import WriteButton from '../components/button/WriteButton';
+import { getNickname } from '../utils/nickname';
+
+const POSTS_STORAGE_KEY = 'communityPosts';
+
+// Todolist와 동일한 카테고리
+const CategoryItem = ['전체', '여행', '문화', '건강', '자연', '음식'];
 
 type Post = {
   id: number;
   title: string;
   content: string;
   tags: string[];
+  createdAt: string;
 };
 
-const posts: Post[] = [
-  {
-    id: 3,
-    title: "아니 근데 마라탕을 먹었다니까???",
-    content: "sdfsdfdfsdf",
-    tags: ["건강"],
-  },
-];
-
-const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
-
 export default function Community() {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectCategory, setSelectCategory] = useState<string>('전체');
+  const [posts, setPosts] = useState<Post[]>([]);
+  const navigate = useNavigate();
+  const nickname = getNickname();
 
-  const filteredPosts = selectedTag
-    ? posts.filter(post => post.tags.includes(selectedTag))
-    : posts;
+  useEffect(() => {
+    const savedPosts = JSON.parse(localStorage.getItem(POSTS_STORAGE_KEY) || '[]');
+    setPosts(savedPosts);
+  }, []);
+
+  // 카테고리로 게시글 필터링
+  const filteredPosts = selectCategory === '전체' 
+    ? posts 
+    : posts.filter(post => post.tags.includes(selectCategory));
 
   return (
     <Container>
-      <MainBox>
-        {/* <Header /> */}
-
-        <ContentWrapper>
-          <TagList>
-    
-            {allTags.map(tag => (
-              <TagButton
-                key={tag}
-                selected={selectedTag === tag}
-                onClick={() =>
-                  setSelectedTag(tag === selectedTag ? null : tag)
-                }
-              >
-                {tag}
-              </TagButton>
-            ))}
-          </TagList>
-
+      <Wrapper>
+        <Categories>
+          <p>현재 {nickname} 님의 커뮤니티</p>
+          <CategoryWrapper>
+            <ul>
+              {CategoryItem.map(category => (
+                <Category
+                  key={category}
+                  isSelect={selectCategory === category}
+                  onClick={() => setSelectCategory(category)}
+                >
+                  {category}
+                </Category>
+              ))}
+            </ul>
+          </CategoryWrapper>
+        </Categories>
+        {filteredPosts.length === 0 ? (
+          <EmptyState>
+            <p>아직 {selectCategory} 카테고리의 게시글이 없습니다.</p>
+          </EmptyState>
+        ) : (
           <PostList>
-            {filteredPosts.length === 0 ? (
-              <EmptyText>해당 태그의 글이 없습니다.</EmptyText>
-            ) : (
-              filteredPosts.map(post => (
-                <PostItem key={post.id}>
-                  <Postbox>
-                    <PostTitle>{post.title}</PostTitle>
-                    <PostContent>{post.content}</PostContent>
-                  </Postbox>
+            {filteredPosts.map(post => (
+              <PostItem key={post.id}>
+                <PostHeader>
+                  <PostTitle>{post.title}</PostTitle>
                   <PostTags>
                     {post.tags.map(tag => (
-                      <PostTagscontent key={tag}>{tag} </PostTagscontent>
+                      <PostTag key={tag}>{tag}</PostTag>
                     ))}
                   </PostTags>
-                </PostItem>
-              ))
-            )}
+                </PostHeader>
+                <PostContent>{post.content}</PostContent>
+              </PostItem>
+            ))}
           </PostList>
-        </ContentWrapper>
-      </MainBox>
+        )}
+        <WriteButtonWrapper>
+          <WriteButton />
+        </WriteButtonWrapper>
+      </Wrapper>
     </Container>
   );
 }
 
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const MainBox = styled.div`
-  position: relative;
+const Wrapper = styled.div`
+  width: calc(100% - 62px);
+  height: calc(100% - 80px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 788px;
-  height: 100%;
-  border-style: solid;
-  border-color: #e3e3e3;
-  border-width: 0px 1px;
+  gap: 32px;
 `;
 
-const ContentWrapper = styled.div`
-  margin-top: 130px;
-  width: 100%;
-  padding: 0 32px;
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+`;
+
+const SubTitle = styled.p`
+  font-size: 18px;
+  color: #666;
+  margin: 8px 0 24px;
+`;
+
+const Categories = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+
+  & > p {
+    color: #a0a0a0;
+  }
 `;
 
-const TagList = styled.div`
+const CategoryWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
+
+  & > ul {
+    display: flex;
+    gap: 16px;
+  }
 `;
 
-const TagButton = styled.button<{ selected: boolean }>`
-  width: 100px;
-  height: 44px;
-  padding: 6px 12px;
-  border-radius: 22px;
-  font-size: 20px;
-  border: 1px solid ${({ selected }) => (selected ? "#A558FF" : "#A0A0A0")};
-  background-color: #fff;
-  color: ${({ selected }) => (selected ? "#A558FF" : "#A0A0A0")};
+interface CategoryProps {
+  isSelect: boolean;
+}
+
+const Category = styled.li<CategoryProps>`
+  padding: 12px 30px;
+  border: 1px solid #a558ff;
+  border-radius: 25px;
   cursor: pointer;
-  transition: all 0.2s;
+  color: ${({ isSelect }) => (isSelect ? 'white' : '#a558ff')};
+  background-color: ${({ isSelect }) => (isSelect ? '#a558ff' : 'transparent')};
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+
+  p {
+    color: #6b7280;
+    font-size: 16px;
+  }
 `;
 
 const PostList = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 24px;
+  width: 100%;
 `;
-
-const Postbox = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 
 const PostItem = styled.div`
-  border-bottom: 1px solid #A0A0A0;
-  margin: 15px;
-  padding: 15px;
+  background-color: #f9fafb;
+  padding: 24px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-bottom: 2px solid #e5e7eb;
+`;
+
+const PostHeader = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const PostTitle = styled.p`
-  font-size: 20px;
-  font-weight: 500;
-`;
-
-const PostContent = styled.p`
-  font-size: 20px;
-  color: #000;
-  margin:4px 0px 20px 0px;
-  line-height: 1.2;
-  font-weight: 400;
-  width: 580px;
-`;
-
-const PostTags = styled.div`
-  width: 68px;
-  height: 30px;
-  border-radius: 17px;
-  border: 1px solid #A558FF;
-  display: flex;
-  justify-content: center;
   align-items: center;
 `;
 
-const PostTagscontent = styled.p`
-  font-size: 12px;
-  color: #A558FF;
-`
+const PostTitle = styled.h3`
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+`;
 
-const EmptyText = styled.div`
+const PostContent = styled.p`
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+`;
+
+const PostTags = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const PostTag = styled.span`
+  padding: 6px 16px;
+  border: 1px solid #a558ff;
+  border-radius: 25px;
+  color: #a558ff;
   font-size: 14px;
-  color: #aaa;
+  background-color: transparent;
+`;
+
+const WriteButtonWrapper = styled.div`
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
 `;

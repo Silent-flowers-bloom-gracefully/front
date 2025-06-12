@@ -1,44 +1,9 @@
-import { useState } from "react";
-import styled from "styled-components";
-import Input from "../components/input/Input";
-import AuthButton from "../components/button/AuthButton";
-import Back from "../components/back/Back";
-import { useNavigate } from "react-router-dom";
-
-export default function Login() {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    if (username.trim() && password.trim()) {
-      navigate("/loginflow");
-    }
-  };
-
-  return (
-    <Container>
-      <MainBox>
-        <Back span="로그인"/>
-        <TextLogo src="/src/assets/TextLogo.png" alt=""/>
-        <InputContainer>
-          <Input 
-            label="아이디" 
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Input 
-            label="비밀번호" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-          />
-        </InputContainer>
-        <AuthButton text="로그인" onClick={handleLogin} />
-      </MainBox>
-    </Container>
-  );
-}
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Back from '../components/back/Back';
+import AuthButton from '../components/button/AuthButton';
+import Input from '../components/input/Input';
 
 const Container = styled.div`
   width: 100%;
@@ -72,3 +37,61 @@ const TextLogo = styled.img`
   width: 322.43px;
   height: 123px;
 `;
+
+const ErrorText = styled.p`
+  color: red;
+  margin-top: 10px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+`;
+
+export default function Login() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = () => {
+    if (!username || !password) {
+      setError('아이디와 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+
+    navigate('/loginflow');
+  };
+
+  return (
+    <Container>
+      <MainBox>
+        <Back span="로그인"/>
+        <TextLogo src="/src/assets/TextLogo.png" alt=""/>
+        <InputContainer>
+          <Input 
+            label="아이디" 
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            error={error}
+          />
+          <Input 
+            label="비밀번호" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            error={error}
+          />
+        </InputContainer>
+        {error && <ErrorText>{error}</ErrorText>}
+        <AuthButton 
+          text="로그인" 
+          onClick={handleLogin}
+        />
+      </MainBox>
+    </Container>
+  );
+} 

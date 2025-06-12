@@ -1,98 +1,77 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import Container from '../components/Container';
-import { useEffect, useState } from 'react';
+import { getNickname } from '../utils/nickname';
 
 type Category = '여행' | '문화' | '건강' | '자연' | '음식';
 
-type Todo = {
-  id: number;
-  content: string;
-  isSucceed: boolean;
-};
+const CategoryItem = ['여행', '문화', '건강', '자연', '음식'];
 
-type BucketList = {
+const STORAGE_KEY = 'bucketList';
+
+interface BucketList {
   id: number;
-  content: string;
-  todo: Todo[];
   category: Category;
-};
-const CategoryItem: Category[] = ['여행', '문화', '건강', '자연', '음식'];
-
-const STORAGE_KEY = 'bucketListItems';
+  title: string;
+  isComplete: boolean;
+}
 
 export default function Progress() {
   const [selectCategory, setSelectCategory] = useState<Category>('여행');
+  const nickname = getNickname();
   const [bucketListItem] = useState<BucketList[]>(() => {
     const savedItems = localStorage.getItem(STORAGE_KEY);
     return savedItems ? JSON.parse(savedItems) : [];
   });
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bucketListItem));
-  }, [bucketListItem]);
-
-  const handleCategoryClick = (category: Category) => {
-    setSelectCategory(category);
-  };
-
   const filteredBucketList = bucketListItem.filter(
-    item => item.category === selectCategory
+    item => item.category === selectCategory,
   );
-
-  const calculateProgress = (todos: Todo[]) => {
-    if (todos.length === 0) return 0;
-    const completedTodos = todos.filter(todo => todo.isSucceed).length;
-    return Math.round((completedTodos / todos.length) * 100);
-  };
 
   return (
     <Container>
       <Wrapper>
         <Categories>
-          <p>현재 와구리짱 님의 버킷리스트</p>
-          <ul>
-            {CategoryItem.map(category => (
-              <Category
-                key={category}
-                isSelect={selectCategory === category}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
-              </Category>
-            ))}
-          </ul>
+          <p>현재 {nickname} 님의 버킷리스트</p>
+          <CategoryWrapper>
+            <ul>
+              {CategoryItem.map(category => (
+                <Category
+                  key={category}
+                  isSelect={selectCategory === category}
+                  onClick={() => setSelectCategory(category as Category)}
+                >
+                  {category}
+                </Category>
+              ))}
+            </ul>
+          </CategoryWrapper>
         </Categories>
         {filteredBucketList.length === 0 ? (
           <EmptyState>
             <p>아직 {selectCategory} 카테고리의 버킷리스트가 없습니다.</p>
           </EmptyState>
         ) : (
-          <ProgressList>
-            {filteredBucketList.map(bucketList => {
-              const progress = calculateProgress(bucketList.todo);
-              return (
-                <ProgressItem key={bucketList.id}>
-                  <ProgressHeader>
-                    <h3>{bucketList.content}</h3>
-                    <ProgressPercentage>{progress}%</ProgressPercentage>
-                  </ProgressHeader>
-                  <ProgressBar>
-                    <ProgressFill progress={progress} />
-                  </ProgressBar>
-                  <TodoCount>
-                    완료된 할 일:{' '}
-                    {bucketList.todo.filter(todo => todo.isSucceed).length} /{' '}
-                    {bucketList.todo.length}
-                  </TodoCount>
-                </ProgressItem>
-              );
-            })}
-          </ProgressList>
+          <BucketListWrapper>
+            {filteredBucketList.map(item => (
+              <BucketListItem key={item.id}>
+                <p>{item.title}</p>
+              </BucketListItem>
+            ))}
+          </BucketListWrapper>
         )}
       </Wrapper>
     </Container>
   );
 }
+
+const Wrapper = styled.div`
+  width: calc(100% - 62px);
+  height: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;
 
 const Categories = styled.section`
   display: flex;
@@ -102,6 +81,12 @@ const Categories = styled.section`
   & > p {
     color: #a0a0a0;
   }
+`;
+
+const CategoryWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
   & > ul {
     display: flex;
@@ -122,23 +107,6 @@ const Category = styled.li<CategoryProps>`
   background-color: ${({ isSelect }) => (isSelect ? '#a558ff' : 'transparent')};
 `;
 
-const Wrapper = styled.div`
-  width: calc(100% - 62px);
-  height: calc(100% - 80px);
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-`;
-
-const BucketList = styled.section`
-  width: calc(100% - 62px);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background-color: #f9fafb;
-  padding: 32px;
-`;
-
 const EmptyState = styled.div`
   display: flex;
   justify-content: center;
@@ -153,62 +121,25 @@ const EmptyState = styled.div`
   }
 `;
 
-const ProgressList = styled.div`
+const BucketListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
   width: 100%;
 `;
 
-const ProgressItem = styled.div`
+const BucketListItem = styled.div`
   background-color: #f9fafb;
   padding: 24px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-`;
+  border-bottom: 2px solid #e5e7eb;
 
-const ProgressHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h3 {
+  p {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
   }
-`;
-
-const ProgressPercentage = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  color: #a558ff;
-`;
-
-const ProgressBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background-color: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
-interface ProgressFillProps {
-  progress: number;
-}
-
-const ProgressFill = styled.div<ProgressFillProps>`
-  width: ${props => props.progress}%;
-  height: 100%;
-  background-color: #a558ff;
-  border-radius: 4px;
-  transition: width 0.3s ease-in-out;
-`;
-
-const TodoCount = styled.p`
-  color: #6b7280;
-  font-size: 14px;
-  margin: 0;
 `;

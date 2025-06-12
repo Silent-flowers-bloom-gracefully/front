@@ -2,12 +2,13 @@ import styled from 'styled-components';
 
 interface PropsType {
   children?: React.ReactNode;
+  hasHeader?: boolean;
 }
 
-const Container = ({ children }: PropsType) => {
+const Container = ({ children, hasHeader = true }: PropsType) => {
   return (
     <Background>
-      <main>{children}</main>
+      <Main hasHeader={hasHeader}>{children}</Main>
     </Background>
   );
 };
@@ -19,20 +20,24 @@ const Background = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
 
-  & > main {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 788px;
-    height: 100%;
-    background-color: #fcf8ff;
-    border: 0px 1px 0px 1px solid #e3e3e3;
-    padding-top: 120px;
-    box-sizing: border-box;
-  }
+interface MainProps {
+  hasHeader: boolean;
+}
+
+const Main = styled.main<MainProps>`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 788px;
+  height: 100%;
+  background-color: #fcf8ff;
+  border: 0px 1px 0px 1px solid #e3e3e3;
+  padding-top: ${({ hasHeader }) => (hasHeader ? '120px' : '0')};
+  box-sizing: border-box;
 `;
 
 export default Container;

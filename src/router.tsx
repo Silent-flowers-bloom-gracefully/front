@@ -1,17 +1,29 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import SelectPage from './selectBuket/selectPage';
-import Main from './pages/Main';
+import Header from './components/Header';
+import Community from './pages/Community';
 import Landing from './pages/Landing';
-import SelectBuket from './pages/SelectBuket';
 import Login from './pages/Login';
 import LoginFlow from './pages/LoginFlow';
+import Main from './pages/Main';
+import My from './pages/My';
+import Progress from './pages/Progress';
+import SelectBuket from './pages/SelectBuket';
 import Signup from './pages/Signup';
 import SignupFlow from './pages/SignupFlow';
-import Community from './pages/Community';
-import WritePage from './pages/Write';
 import Todolist from './pages/Todolist';
-import App from './App';
-import Progress from './pages/Progress';
+import WritePage from './pages/Write';
+import SelectPage from './selectBuket/selectPage';
+
+// 헤더 조건부 렌더링 레이아웃
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('key');
+  return (
+    <>
+      {token && <Header />}
+      {children}
+    </>
+  );
+};
 
 const router = createBrowserRouter([
   {
@@ -52,22 +64,24 @@ const router = createBrowserRouter([
   },
   {
     path: '/community',
-    element: <Community />
+    element: <Layout><Community /></Layout>
   },
   {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        path: 'todolist',
-        element: <Todolist />,
-      },
-      {
-        path: 'progress',
-        element: <Progress />,
-      },
-    ],
+    path: "/write",
+    element: <WritePage />
   },
+  {
+    path: "/todolist",
+    element: <Layout><Todolist /></Layout>
+  },
+  {
+    path: "/progress",
+    element: <Layout><Progress /></Layout>
+  },
+  {
+    path: "/my",
+    element: <Layout><My /></Layout>
+  }
 ]);
 
 export default router;

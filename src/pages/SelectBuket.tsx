@@ -1,12 +1,14 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { authApi } from '../api/auth';
 import logoUrl from '../assets/TextLogo.png';
 import textboxUrl from '../assets/Textbox.png';
 import waguriUrl from '../assets/waguri2.png';
 import waguriClickUrl from '../assets/waguri3.png';
 import waguriSuccessUrl from '../assets/waguri4.png';
-import { useState } from 'react';
 import FlowButton from '../components/button/FlowButton';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const initialCategoryList = [
   { title: '여행', isSelect: false },
@@ -43,9 +45,20 @@ const initialCategoryList = [
 
 const SelectPage = () => {
   const navigate = useNavigate();
+  const { signupData } = useAuth();
   const [categories, setCategories] = useState(initialCategoryList);
   const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 컴포넌트 마운트 시 로컬 스토리지 체크
+  useEffect(() => {
+    const key = localStorage.getItem('key');
+    if (key) {
+      navigate('/todolist');
+    }
+  }, [navigate]);
 
   const handleCategoryClick = (title: string) => {
     setCategories(prevCategories =>
@@ -55,6 +68,71 @@ const SelectPage = () => {
           : category
       )
     );
+  };
+
+  const handleProceed = () => {
+    const selectedCategories = categories
+      .filter(category => category.isSelect)
+      .map(category => category.title);
+
+    if (selectedCategories.length === 0) {
+      setError('최소 1개 이상의 카테고리를 선택해주세요.');
+      return;
+    }
+
+    setSuccess(true);
+  };
+
+  const handleConfirm = async () => {
+    const selectedCategories = categories
+      .filter(category => category.isSelect)
+      .map(category => category.title);
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // 회원가입 API 호출
+      const signupResponse = await authApi.signUp({
+        username: signupData.username,
+        password: signupData.password,
+        nickname: signupData.nickname,
+        categories: selectedCategories
+      });
+
+      console.log('회원가입 응답:', signupResponse);
+
+      // 회원가입 성공 시 바로 로그인 API 호출
+      const loginResponse = await authApi.login(signupData.username, signupData.password);
+      console.log('로그인 응답 전체:', loginResponse);
+      console.log('로그인 응답 헤더:', loginResponse.headers);
+
+      // authorization 헤더가 있으면 저장
+      if (loginResponse.headers.authorization) {
+        localStorage.setItem('key', loginResponse.headers.authorization);
+        console.log('로컬 스토리지 저장 후:', localStorage.getItem('key'));
+        
+        // 저장 후 다시 확인
+        const savedKey = localStorage.getItem('key');
+        if (savedKey) {
+          navigate('/todolist');
+        } else {
+          console.error('로컬 스토리지 저장 실패');
+          setError('로그인에 실패했습니다.');
+          setSuccess(false);
+        }
+      } else {
+        console.error('authorization 헤더가 없습니다.');
+        setError('로그인에 실패했습니다.');
+        setSuccess(false);
+      }
+    } catch (err) {
+      console.error('에러:', err);
+      setError('처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+      setSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,8 +149,8 @@ const SelectPage = () => {
                 괜찮아?
               </p>
             </SpeechBubble>
-            <div onClick={() => navigate('/todolist')}>
-              <FlowButton span="이대로 진행해도 돼!" />
+            <div onClick={handleConfirm}>
+              <FlowButton span={isLoading ? "처리 중..." : "이대로 진행해도 돼!"} />
             </div>
             <div onClick={() => setSuccess(false)}>
               <FlowButton span="아니야!! 수정할게" />
@@ -97,7 +175,9 @@ const SelectPage = () => {
             </CategoryBox>
           </CategoryWrapper>
         </div>
-        <ButtonBox onClick={() => setSuccess(true)}>완료</ButtonBox>
+        <ButtonBox onClick={handleProceed}>
+          완료
+        </ButtonBox>
       </SelectBox>
       {success ? null : (
         <div>
