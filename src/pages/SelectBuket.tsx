@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { authApi } from '../api/auth';
@@ -52,13 +52,7 @@ const SelectPage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 컴포넌트 마운트 시 로컬 스토리지 체크
-  useEffect(() => {
-    const key = localStorage.getItem('key');
-    if (key) {
-      navigate('/todolist');
-    }
-  }, [navigate]);
+
 
   const handleCategoryClick = (title: string) => {
     setCategories(prevCategories =>

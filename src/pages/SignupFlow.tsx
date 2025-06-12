@@ -36,8 +36,11 @@ export default function SignupFlow() {
   const handleLineClick = () => {
     if (currentIdx === 1) {
       setShowChoose(true);
+    } else if (currentIdx === 2) {
+      navigate("/selectbuket");
+    } else {
+      setCurrentIdx((prev) => (prev + 1) % dummyLines.length);
     }
-    setCurrentIdx((prev) => (prev + 1) % dummyLines.length);
   };
 
   const handleChooseClick = () => {
@@ -61,9 +64,6 @@ export default function SignupFlow() {
         description: "이태영!! 정말 멋진 이름이야.\n이제 버킷리스트 달성하러 가보자고!"
       };
       setCurrentIdx(2);
-      setTimeout(() => {
-        navigate("/selectbuket");
-      }, 2000);
     }, 2000);
   };
 
@@ -80,9 +80,7 @@ export default function SignupFlow() {
         name: "카오루코 와구리",
         description: `${nickname}!! 정말 멋진 이름이야.\n이제 버킷리스트 달성하러 가보자고!`
       };
-      setTimeout(() => {
-        navigate("/selectbuket");
-      }, 2000);
+      setCurrentIdx(2);
     }
   };
 
