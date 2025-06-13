@@ -189,7 +189,7 @@ const NameInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
   height: 100%;
   background-color: rgb(0, 0, 0);
@@ -199,6 +199,7 @@ const NameInputContainer = styled.div`
 const NameInputTitle = styled.h2`
   color: white;
   font-size: 24px;
+  margin-top: 300px;
   margin-bottom: 20px;
   font-weight: 500;
 `;

@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import styled from "styled-components";
-import logoUrl from "./assets/Logo.png";
-import flower1Url from "./assets/flower1.png";
-import waguri1Url from "./assets/waguri1.png";
-import flower2Url from "./assets/flower2.png";
-import textLogoUrl from "./assets/TextLogo.png";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import flower1Url from "./assets/flower1.png";
+import flower2Url from "./assets/flower2.png";
+import logoUrl from "./assets/Logo.png";
+import textLogoUrl from "./assets/TextLogo.png";
+import waguri1Url from "./assets/waguri1.png";
 
 export default function App() {
   const [isVisible, setIsVisible] = useState(false);
