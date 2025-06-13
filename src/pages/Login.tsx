@@ -40,7 +40,7 @@ const TextLogo = styled.img`
 
 const ErrorText = styled.p`
   color: red;
-  margin-top: 10px;
+  margin-top: -80px;
 `;
 
 const ButtonContainer = styled.div`
@@ -86,11 +86,11 @@ export default function Login() {
             error={error}
           />
         </InputContainer>
-        {error && <ErrorText>{error}</ErrorText>}
         <AuthButton 
           text="로그인" 
           onClick={handleLogin}
         />
+        {error && <ErrorText>{error}</ErrorText>}
       </MainBox>
     </Container>
   );

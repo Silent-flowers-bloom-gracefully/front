@@ -1,13 +1,21 @@
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
 
 interface BackProps{
   span: string;
 }
 
-const Back = ({span}: BackProps) =>{
-  return(
-    <Container>
-      <BackImg src="/src/assets/arrow.png" alt="" />
+
+const Back = ({ span }: BackProps) => {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate("/main")
+  }
+
+  return (
+    <Container onClick={handleClick}>
+      <BackImg src="/src/assets/arrow.png" alt="뒤로가기" />
       <Span>{span}</Span>
     </Container>
   )
@@ -20,6 +28,7 @@ const Container = styled.div`
   gap: 12px;
   left: 13px;
   top: 21px;
+  cursor: pointer;
 `
 const BackImg = styled.img`
   
