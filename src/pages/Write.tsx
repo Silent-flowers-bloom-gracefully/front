@@ -5,6 +5,7 @@ import Leftarrow from "../assets/leftarrow.png";
 import waguri8Url from '../assets/waguri8.png';
 import Button from "../components/button/Button";
 import Container from '../components/Container';
+import { getNickname } from '../utils/nickname';
 
 const POSTS_STORAGE_KEY = 'communityPosts';
 
@@ -14,6 +15,7 @@ interface Post {
   content: string;
   tags: string[];
   createdAt: string;
+  author: string;
 }
 
 const WritePage = () => {
@@ -23,6 +25,7 @@ const WritePage = () => {
   const [title, setTitle] = useState("");
   const [showComplete, setShowComplete] = useState(false);
   const navigate = useNavigate();
+  const nickname = getNickname();
 
   const handleComplete = () => {
     if (selectedTag && content && title) {
@@ -32,7 +35,8 @@ const WritePage = () => {
         title,
         content,
         tags: [selectedTag],
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        author: nickname
       };
       
       localStorage.setItem(POSTS_STORAGE_KEY, JSON.stringify([...savedPosts, newPost]));

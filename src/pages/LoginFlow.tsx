@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Choose from "../components/choose/Choose";
@@ -80,10 +80,7 @@ export default function LoginFlow() {
   const [zoomLevel, setZoomLevel] = useState(0);
 
   useEffect(() => {
-    const key = localStorage.getItem('key');
-    if (!key) {
-      navigate('/login');
-    }
+    // key 체크 로직 제거
   }, [navigate]);
 
   const handleLineClick = () => {
@@ -109,11 +106,7 @@ export default function LoginFlow() {
     if (selectedChoice === 0) {
       // 첫 번째 선택지
       setTimeout(() => {
-        const key = localStorage.getItem('key');
-        if (!key) {
-          navigate('/login');
-          return;
-        }
+        localStorage.setItem('key', 'user-logged-in');
         navigate("/todolist");
       }, 2000);
     } else if (selectedChoice === 1) {
@@ -130,11 +123,7 @@ export default function LoginFlow() {
             setZoomLevel(2);
             // todolist로 이동
             setTimeout(() => {
-              const key = localStorage.getItem('key');
-              if (!key) {
-                navigate('/login');
-                return;
-              }
+              localStorage.setItem('key', 'user-logged-in');
               navigate("/todolist");
             }, 1000);
           }, 1000);

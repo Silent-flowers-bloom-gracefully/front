@@ -16,6 +16,7 @@ type Post = {
   content: string;
   tags: string[];
   createdAt: string;
+  author: string;
 };
 
 export default function Community() {

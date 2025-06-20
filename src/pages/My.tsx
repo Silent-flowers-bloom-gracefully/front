@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import threeDot from '../assets/3dot.png';
 import waguri9Url from '../assets/waguri9.png';
@@ -14,9 +15,11 @@ interface Post {
   content: string;
   tags: string[];
   createdAt: string;
+  author: string;
 }
 
 export default function My() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState<number | null>(null);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
@@ -27,8 +30,14 @@ export default function My() {
 
   useEffect(() => {
     const savedPosts = JSON.parse(localStorage.getItem(POSTS_STORAGE_KEY) || '[]');
-    setPosts(savedPosts);
-  }, []);
+    const myPosts = savedPosts.filter((post: Post) => post.author === nickname);
+    setPosts(myPosts);
+  }, [nickname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('key');
+    navigate('/main');
+  };
 
   const handleDelete = (post: Post) => {
     setDeletingPost(post);
@@ -65,9 +74,14 @@ export default function My() {
   return (
     <Container>
       <Wrapper>
-        <Categories>
-          <p>현재 {nickname} 님의 마이페이지</p>
-        </Categories>
+        <HeaderSection>
+          <Categories>
+            <p>현재 {nickname} 님의 마이페이지</p>
+          </Categories>
+          <LogoutButton onClick={handleLogout}>
+            로그아웃
+          </LogoutButton>
+        </HeaderSection>
         {posts.length === 0 ? (
           <EmptyState>
             <p>아직 작성한 게시글이 없습니다.</p>
@@ -141,6 +155,12 @@ const Wrapper = styled.div`
   gap: 32px;
 `;
 
+const HeaderSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const Categories = styled.section`
   display: flex;
   flex-direction: column;
@@ -148,6 +168,22 @@ const Categories = styled.section`
 
   & > p {
     color: #a0a0a0;
+  }
+`;
+
+const LogoutButton = styled.button`
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #e5e7eb;
+    color: #374151;
   }
 `;
 

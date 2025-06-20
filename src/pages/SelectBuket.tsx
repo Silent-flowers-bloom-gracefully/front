@@ -77,57 +77,10 @@ const SelectPage = () => {
     setSuccess(true);
   };
 
-  const handleConfirm = async () => {
-    const selectedCategories = categories
-      .filter(category => category.isSelect)
-      .map(category => category.title);
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // 회원가입 API 호출
-      const signupResponse = await authApi.signUp({
-        username: signupData.username,
-        password: signupData.password,
-        nickname: signupData.nickname,
-        categories: selectedCategories
-      });
-
-      console.log('회원가입 응답:', signupResponse);
-
-      // 회원가입 성공 시 바로 로그인 API 호출
-      const loginResponse = await authApi.login(signupData.username, signupData.password);
-      console.log('로그인 응답 전체:', loginResponse);
-      console.log('로그인 응답 헤더:', loginResponse.headers);
-
-      // authorization 헤더가 있으면 저장
-      if (loginResponse.headers.authorization) {
-        localStorage.setItem('key', loginResponse.headers.authorization);
-        console.log('로컬 스토리지 저장 후:', localStorage.getItem('key'));
-        
-        // 저장 후 다시 확인
-        const savedKey = localStorage.getItem('key');
-        if (savedKey) {
-          navigate('/todolist');
-        } else {
-          console.error('로컬 스토리지 저장 실패');
-          setError('로그인에 실패했습니다.');
-          setSuccess(false);
-        }
-      } else {
-        console.error('authorization 헤더가 없습니다.');
-        setError('로그인에 실패했습니다.');
-        setSuccess(false);
-      }
-    } catch (err) {
-      console.error('에러:', err);
-      setError('처리 중 오류가 발생했습니다. 다시 시도해주세요.');
-      setSuccess(false);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleConfirm = () => {
+  navigate('/todolist');
   };
+
 
   return (
     <Container>

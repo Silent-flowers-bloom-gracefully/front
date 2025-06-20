@@ -64,7 +64,7 @@ export default function SignupFlow() {
         description: "이태영!! 정말 멋진 이름이야.\n이제 버킷리스트 달성하러 가보자고!"
       };
       setCurrentIdx(2);
-    });
+    }, 2000);
   };
 
   const handleNameSubmit = () => {

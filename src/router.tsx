@@ -16,10 +16,9 @@ import SelectPage from './selectBuket/selectPage';
 
 // 헤더 조건부 렌더링 레이아웃
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('key');
   return (
     <>
-      {token && <Header />}
+      <Header />
       {children}
     </>
   );
