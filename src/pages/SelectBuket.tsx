@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { authApi } from '../api/auth';
 import logoUrl from '../assets/TextLogo.png';
 import textboxUrl from '../assets/Textbox.png';
 import waguriUrl from '../assets/waguri2.png';
 import waguriClickUrl from '../assets/waguri3.png';
 import waguriSuccessUrl from '../assets/waguri4.png';
 import FlowButton from '../components/button/FlowButton';
-import { useAuth } from '../context/AuthContext';
 
 const initialCategoryList = [
   { title: '여행', isSelect: false },
@@ -45,7 +43,6 @@ const initialCategoryList = [
 
 const SelectPage = () => {
   const navigate = useNavigate();
-  const { signupData } = useAuth();
   const [categories, setCategories] = useState(initialCategoryList);
   const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
   const [success, setSuccess] = useState(false);
