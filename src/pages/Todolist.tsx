@@ -3,7 +3,7 @@ import Container from '../components/Container';
 import { useState, useEffect } from 'react';
 import CheckBox from '../components/button/CheckBox';
 
-type Category = '여행' | '문화' | '건강' | '자연' | '음식';
+type Category = string;
 
 type Todo = {
   id: number;
@@ -17,11 +17,12 @@ type BucketList = {
   todo: Todo[];
   category: Category;
 };
-const CategoryItem: Category[] = ['여행', '문화', '건강', '자연', '음식'];
+// const CategoryItem: Category[] = ['여행', '문화', '건강', '자연', '음식'];
 
 const STORAGE_KEY = 'bucketListItems';
 
 const Todolist = () => {
+  const [categoryItems, setCategoryItems] = useState<Category[]>([]);
   const [selectCategory, setSelectCategory] = useState<Category>('여행');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [bucketListItem, setBucketListItem] = useState<BucketList[]>(() => {
@@ -43,6 +44,17 @@ const Todolist = () => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bucketListItem));
   }, [bucketListItem]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('selectedCategories');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setCategoryItems(parsed);
+      if (parsed.length > 0) {
+        setSelectCategory(parsed[0]);
+      }
+    }
+  }, []);
 
   const handleCategoryClick = (category: Category) => {
     setSelectCategory(category);
@@ -116,7 +128,7 @@ const Todolist = () => {
         <Categories>
           <p>세부 계획을 확인하고 싶으신 버킷리스트를 선택해주세요</p>
           <ul>
-            {CategoryItem.map(category => (
+            {categoryItems.map(category => (
               <Category
                 key={category}
                 isSelect={selectCategory === category}

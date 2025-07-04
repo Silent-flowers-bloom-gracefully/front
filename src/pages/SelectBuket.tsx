@@ -49,10 +49,7 @@ const SelectPage = () => {
   const [categories, setCategories] = useState(initialCategoryList);
   const [nowWaguriUrl, setWaguriUrl] = useState(waguriUrl);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-
 
   const handleCategoryClick = (title: string) => {
     setCategories(prevCategories =>
@@ -70,17 +67,22 @@ const SelectPage = () => {
       .map(category => category.title);
 
     if (selectedCategories.length === 0) {
-      setError('최소 1개 이상의 카테고리를 선택해주세요.');
+      // 최소 1개 이상 선택하지 않으면 리턴
       return;
     }
+
+    // 선택된 카테고리 localStorage에 저장
+    localStorage.setItem(
+      'selectedCategories',
+      JSON.stringify(selectedCategories)
+    );
 
     setSuccess(true);
   };
 
   const handleConfirm = () => {
-  navigate('/todolist');
+    navigate('/todolist');
   };
-
 
   return (
     <Container>
@@ -97,7 +99,9 @@ const SelectPage = () => {
               </p>
             </SpeechBubble>
             <div onClick={handleConfirm}>
-              <FlowButton span={isLoading ? "처리 중..." : "이대로 진행해도 돼!"} />
+              <FlowButton
+                span={isLoading ? '처리 중...' : '이대로 진행해도 돼!'}
+              />
             </div>
             <div onClick={() => setSuccess(false)}>
               <FlowButton span="아니야!! 수정할게" />
@@ -122,9 +126,7 @@ const SelectPage = () => {
             </CategoryBox>
           </CategoryWrapper>
         </div>
-        <ButtonBox onClick={handleProceed}>
-          완료
-        </ButtonBox>
+        <ButtonBox onClick={handleProceed}>완료</ButtonBox>
       </SelectBox>
       {success ? null : (
         <div>
