@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import styled from "styled-components";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Container from '../components/Container';
 import WriteButton from '../components/button/WriteButton';
 import { getNickname } from '../utils/nickname';
@@ -8,7 +7,7 @@ import { getNickname } from '../utils/nickname';
 const POSTS_STORAGE_KEY = 'communityPosts';
 
 // Todolist와 동일한 카테고리
-const CategoryItem = ['전체', '여행', '문화', '건강', '자연', '음식'];
+// const CategoryItem = ['전체', '여행', '문화', '건강', '자연', '음식'];
 
 type Post = {
   id: number;
@@ -20,20 +19,31 @@ type Post = {
 };
 
 export default function Community() {
+  const [categoryItems, setCategoryItems] = useState<string[]>(['전체']);
   const [selectCategory, setSelectCategory] = useState<string>('전체');
   const [posts, setPosts] = useState<Post[]>([]);
-  const navigate = useNavigate();
   const nickname = getNickname();
 
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem(POSTS_STORAGE_KEY) || '[]');
+    const saved = localStorage.getItem('selectedCategories');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setCategoryItems(['전체', ...parsed]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedPosts = JSON.parse(
+      localStorage.getItem(POSTS_STORAGE_KEY) || '[]'
+    );
     setPosts(savedPosts);
   }, []);
 
   // 카테고리로 게시글 필터링
-  const filteredPosts = selectCategory === '전체' 
-    ? posts 
-    : posts.filter(post => post.tags.includes(selectCategory));
+  const filteredPosts =
+    selectCategory === '전체'
+      ? posts
+      : posts.filter(post => post.tags.includes(selectCategory));
 
   return (
     <Container>
@@ -42,7 +52,7 @@ export default function Community() {
           <p>현재 {nickname} 님의 커뮤니티</p>
           <CategoryWrapper>
             <ul>
-              {CategoryItem.map(category => (
+              {categoryItems.map(category => (
                 <Category
                   key={category}
                   isSelect={selectCategory === category}
@@ -89,19 +99,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-  color: #333;
-`;
-
-const SubTitle = styled.p`
-  font-size: 18px;
-  color: #666;
-  margin: 8px 0 24px;
 `;
 
 const Categories = styled.section`
