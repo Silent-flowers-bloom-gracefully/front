@@ -24,7 +24,7 @@ const STORAGE_KEY = 'bucketListItems';
 const Todolist = () => {
   const [categoryItems, setCategoryItems] = useState<Category[]>([]);
   const [selectCategory, setSelectCategory] = useState<Category>('여행');
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingIds, setEditingIds] = useState<number[]>([]);
   const [bucketListItem, setBucketListItem] = useState<BucketList[]>(() => {
     const savedItems = localStorage.getItem(STORAGE_KEY);
     return savedItems ? JSON.parse(savedItems) : [];
@@ -76,17 +76,25 @@ const Todolist = () => {
     setBucketListItem([...bucketListItem, newBucketList]);
   };
 
-  const handleEdit = () => {
-    if (!isEditing) {
-      setIsEditing(!isEditing);
+  const handleEdit = (bucketId: number) => {
+    const isCurrentlyEditing = editingIds.includes(bucketId);
+
+    if (!isCurrentlyEditing) {
+      // 수정 모드 시작
+      setEditingIds([...editingIds, bucketId]);
     } else {
+      // 수정 모드 종료 - 빈 내용 필터링
       setBucketListItem(
-        bucketListItem.map(bucketList => ({
-          ...bucketList,
-          todo: bucketList.todo.filter(todo => todo.content.length !== 0),
-        }))
+        bucketListItem.map(bucketList =>
+          bucketList.id === bucketId
+            ? {
+                ...bucketList,
+                todo: bucketList.todo.filter(todo => todo.content.length !== 0),
+              }
+            : bucketList
+        )
       );
-      setIsEditing(!isEditing);
+      setEditingIds(editingIds.filter(id => id !== bucketId));
     }
   };
 
@@ -150,7 +158,7 @@ const Todolist = () => {
             {filteredBucketList.map((bucketList, i) => (
               <BucketList key={bucketList.id}>
                 <BucketListTitle>
-                  {isEditing ? (
+                  {editingIds.includes(bucketList.id) ? (
                     <input
                       value={bucketList.content}
                       onChange={e => {
@@ -177,14 +185,14 @@ const Todolist = () => {
                     <p>{bucketList.content}</p>
                   )}
                   <div>
-                    <button onClick={handleEdit}>
-                      {isEditing ? '완료' : '수정'}
+                    <button onClick={() => handleEdit(bucketList.id)}>
+                      {editingIds.includes(bucketList.id) ? '완료' : '수정'}
                     </button>
                     <button onClick={() => handleDelete(i)}>삭제</button>
                   </div>
                 </BucketListTitle>
                 {bucketList.todo.map((todo, j) => {
-                  if (!isEditing) {
+                  if (!editingIds.includes(bucketList.id)) {
                     return (
                       <TodoList key={todo.id}>
                         <CheckBox
@@ -235,7 +243,7 @@ const Todolist = () => {
                     );
                   }
                 })}
-                {isEditing && (
+                {editingIds.includes(bucketList.id) && (
                   <button
                     onClick={() => {
                       const newList = bucketListItem.map((el, index) => {
